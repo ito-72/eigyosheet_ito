@@ -106,15 +106,42 @@
     <button type="submit">記録する</button>
   </form>
 
+  <button id="exportMarkdown">📄 マークダウン形式でダウンロード</button>
+
   <script>
-    document.getElementById('logForm').addEventListener('submit', async (e) => {
+    const form = document.getElementById('logForm');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const form = e.target;
       const data = Object.fromEntries(new FormData(form).entries());
       console.log("送信データ:", data);
-      // fetch('/api/addLog.js', { method: 'POST', body: JSON.stringify(data) }) ... などで送信
       alert("記録されました（仮）\n※実際にはAPI接続が必要です")
       form.reset();
+    });
+
+    document.getElementById('exportMarkdown').addEventListener('click', () => {
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (!data.date || !data.client) {
+        alert('最低限、日付と訪問先を入力してください');
+        return;
+      }
+      const md = `### ${data.date}：${data.client}（${data.person || '担当者不明'}）\n` +
+        `- 手段：${data.method} ／ 接触結果：${data.result}\n` +
+        `- 会話：${data.conversation || '（記載なし）'}\n` +
+        `- 所感：${data.impression || '（記載なし）'}\n` +
+        `- ステータス：${data.status} ／ 次アクション：${data.nextAction || '未記入'}\n` +
+        `- 次回予定：${data.nextDate || '未定'} ／ 成約：${data.closed} ／ 金額：${data.amount || '未記入'}\n` +
+        `- 備考：${data.memo || '（記載なし）'}\n`;
+
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${data.date}_${data.client}_営業記録.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>
