@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>営業記録アプリ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f7f7f7;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    textarea {
+      height: 80px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>営業記録入力</h1>
+
+  <form id="logForm">
+    <label>日付</label>
+    <input type="date" name="date" required>
+
+    <label>訪問先</label>
+    <input type="text" name="client" required>
+
+    <label>担当者名</label>
+    <input type="text" name="person">
+
+    <label>手段</label>
+    <select name="method">
+      <option>訪問</option>
+      <option>電話</option>
+      <option>メール</option>
+      <option>LINE</option>
+    </select>
+
+    <label>接触結果</label>
+    <select name="result">
+      <option>話せた</option>
+      <option>不在</option>
+      <option>名刺のみ</option>
+    </select>
+
+    <label>会話内容</label>
+    <textarea name="conversation"></textarea>
+
+    <label>所感</label>
+    <textarea name="impression"></textarea>
+
+    <label>ステータス</label>
+    <select name="status">
+      <option>未接触</option>
+      <option>フォロー中</option>
+      <option>成約</option>
+      <option>失注</option>
+    </select>
+
+    <label>次アクション</label>
+    <textarea name="nextAction"></textarea>
+
+    <label>次回予定日</label>
+    <input type="date" name="nextDate">
+
+    <label>成約</label>
+    <select name="closed">
+      <option>未</option>
+      <option>済</option>
+    </select>
+
+    <label>金額（成約時のみ）</label>
+    <input type="number" name="amount" step="1000">
+
+    <label>備考</label>
+    <textarea name="memo"></textarea>
+
+    <button type="submit">記録する</button>
+  </form>
+
+  <script>
+    document.getElementById('logForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      console.log("送信データ:", data);
+      // fetch('/api/addLog.js', { method: 'POST', body: JSON.stringify(data) }) ... などで送信
+      alert("記録されました（仮）\n※実際にはAPI接続が必要です")
+      form.reset();
+    });
+  </script>
+</body>
+</html>
